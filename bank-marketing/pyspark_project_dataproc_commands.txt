@@ -1,0 +1,132 @@
+======== HDFS commands ========== 
+
+wget https://raw.githubusercontent.com/HINKx3/Big-Data/main/Data/bank_prospects.csv
+
+
+hadoop fs -ls
+
+hadoop fs -mkdir /user/hinkx3
+
+hadoop fs -mkdir /user/hinkx3/bankraw
+
+
+==============PySpark Shell ===========
+
+pyspark
+
+bankProspectsDF = spark.read.csv("/user/hinkx3/bankraw/bank_prospects.csv",header=True)
+
+
+bankProspectsDF.show()
+
+"""## Remove the record with unknow value in country column"""
+
+bankProspectsDF1 = bankProspectsDF.filter(bankProspectsDF['country'] != "unknown")
+
+bankProspectsDF1.show()
+
+"""##  Cast the String datatype to Integer/Float"""
+
+bankProspectsDF1.printSchema()
+
+from pyspark.sql.types import IntegerType,FloatType
+
+bankProspectsDF2 = bankProspectsDF1.withColumn("age", bankProspectsDF1["age"].cast(IntegerType())).withColumn("salary", bankProspectsDF1["salary"].cast(FloatType()))
+
+bankProspectsDF2.printSchema()
+
+"""## Replace Age and Salary with average values of their respective column
+
+[link text](https://)import mean from sql.fuctions
+"""
+
+from pyspark.sql.functions import mean
+
+"""### Calculate "mean" value of the age"""
+
+mean_age_val = bankProspectsDF2.select(mean(bankProspectsDF2['age'])).collect()
+
+type(mean_age_val)
+
+mean_age_val
+
+mean_age = mean_age_val[0][0]
+
+mean_age
+
+"""### Calculate mean salary value"""
+
+mean_salary_val = bankProspectsDF2.select(mean(bankProspectsDF2['salary'])).collect()
+
+mean_salary = mean_salary_val[0][0]
+
+mean_salary
+
+"""### Replace missing age with average value"""
+
+bankProspectsDF2.show()
+
+bankbankProspectsDF3 = bankProspectsDF2.na.fill(mean_age,["age"])
+
+bankbankProspectsDF3.show()
+
+"""### Replace missing age with salary value"""
+
+bankbankProspectsDF4 = bankbankProspectsDF3.na.fill(mean_salary,["salary"])
+
+bankbankProspectsDF4.show()
+
+bankbankProspectsDF4.printSchema()
+
+"""## Write the transformed file to a new csv file """
+
+bankbankProspectsDF4.write.format("csv").save("bank_prospects_transformed")
+
+
+========  verify if the file is present in HDFS ===========
+hadoop fs -ls bank_prospects_transformed
+
+hadoop fs -cat bank_prospects_transformed/part-00000-bf47ed47-291c-40df-91b5-8fc1fabfb254-c000.csv
+
+======== Hive ==========
+
+hive
+
+create database if not exists futurex;
+
+
+create table bankprospectcleaned (age INT, salary FLOAT,gender String,country String, purchased String) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '/user/hinkx3/bank_prospects_transformed/' TBLPROPERTIES ("skip.header.line.count"="1") ;
+
+show tables;
+
+select * from bankprospectcleaned;
+
+======= spark-submit ===================
+
+# Make the following changes to pyspark code
+
+< Spark session code
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("hinkx3-project").getOrCreate()
+
+>
+
+< Save file to a new location
+
+bankbankProspectsDF4.write.format("csv").save("bank_prospects_transformed_2")
+
+>
+
+# Then trigger spark-submit
+
+
+spark-submit bankprospects_trasformation.py
+=========
+
+
+
+hadoop fs -ls bank_prospects_transformed_2
+
+hadoop fs -cat bank_prospects_transformed_2/part-00000-d135b2e6-90e9-4d0a-a7e6-5130ee6bc001-c000.csv
+
