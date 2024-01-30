@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Tue Jan 30 10:22:02 EST 2024:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-018d-5af6-868f-00000cb3fda8 
+on database directory /Users/ytuo/PycharmProjects/Datapipeline/metastore_db with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@67424e82 
+Loaded from file:/opt/homebrew/Cellar/apache-spark/3.5.0/libexec/jars/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.22+9-LTS-219
+user.dir=/Users/ytuo/PycharmProjects/Datapipeline
+os.name=Mac OS X
+os.arch=aarch64
+os.version=14.1.1
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

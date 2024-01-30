@@ -1,0 +1,15 @@
+{
+  "header": {
+    "created_by": "hink",
+    "created_date": "20231011"
+  },
+  "body": {
+    "pg_target_table": "hinkschema.practice",
+    "replace_null_value": {
+      "course_id": "NO",
+      "course_name": "NO",
+      "author_name": "YES",
+      "no_of_reviews": "NO"
+    }
+  }
+}
